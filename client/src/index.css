@@ -1,0 +1,87 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+#root {
+  height: 100vh;
+}
+body {
+  height: 100vh;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url("./assets/images/bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+.messages-height {
+  height: 100%;
+}
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.glass-blacker {
+  background: rgba(38, 41, 53, 0.25);
+  -webkit-backdrop-filter: blur(7px);
+  backdrop-filter: blur(7px);
+  border: 1px solid rgba(38, 41, 53, 0.125);
+}
+
+.glass-blackest {
+  background: rgba(19, 18, 18, 0.65);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(19, 18, 18, 0.325);
+}
+
+.glass-gray {
+  background: rgba(195, 188, 188, 0.1);
+  -webkit-backdrop-filter: blur(7px);
+  backdrop-filter: blur(7px);
+  border: 1px solid rgba(195, 188, 188, 0.05);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+.bck {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Track */
+/* ::-webkit-scrollbar-track {
+  background: #f1f1f1;
+} */
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.4);
+}
+@media (max-width: 573px) {
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+  }
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.border-custom {
+  border-bottom: 0.5px solid rgb(170, 170, 170);
+}
