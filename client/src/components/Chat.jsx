@@ -99,21 +99,29 @@ const Chat = ({ contact, setToggle, showMessage }) => {
     };
 
     return (
-        <div className='h-full glass flex flex-col justify-between'>
-            <div className='p-3 flex justify-between items-center bck'>
+        <div className='h-full flex flex-col justify-between'>
+            <div className='p-3 flex justify-between items-center'>
                 <div className='flex items-center'>
-                    <img src={contact.image ? contact.image : Placeholder} className='h-9 w-9 rounded-full object-cover' alt='Avatar' />
-                    <h6 className='text-[15px] text-white ms-1'>
-                        {contact ? `${contact.firstname} ${contact.lastname}` : ''}
-                    </h6>
-                </div>
+                    <button className='block lg:hidden me-4' onClick={setToggle}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-pink-500">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                        </svg>
 
+                    </button>
+                    <div className='flex items-center'>
+                        <img src={contact.image ? contact.image : Placeholder} className='h-9 w-9 rounded-full object-cover border' alt='Avatar' />
+                        <h6 className='text-[15px] ms-1 text-gray-700'>
+                            {contact ? `${contact.firstname} ${contact.lastname}` : ''}
+                        </h6>
+                    </div>
+                </div>
                 <button className='block lg:hidden' onClick={setToggle}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-gray-500">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                     </svg>
                 </button>
             </div>
+            <hr></hr>
             <div className='flex-1 p-3 overflow-x-auto' ref={chatContainerRef}>
                 {showMessage ? (
                     messages && messages.length !== 0 ? (
@@ -133,10 +141,18 @@ const Chat = ({ contact, setToggle, showMessage }) => {
                 <div ref={messagesEndRef} />
             </div>
             <form onSubmit={handleSendMessage}>
-                <div className='p-3 flex'>
+                <div className='p-3 flex items-center'>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 lg:w-7 lg:h-7 md:w-7 lg:h-7 text-pink-600 ms-3 ">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 lg:w-7 lg:h-7 md:w-7 lg:h-7 text-pink-600 mx-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                    </svg>
+
                     <textarea
                         ref={textareaRef}
-                        className="glass-gray overflow-hidden resize-none border rounded max-h-70 w-full shadow appearance-none border border-gray-400 rounded-full py-3 px-3 text-white text-[13px] leading-tight focus:outline-none focus:shadow-outline placeholder:text-gray-200 placeholder:text-[13px]"
+                        className="center-placeholder shadow-lg overflow-hidden flex items-center resize-none border border-gray-200 rounded max-h-70 w-full shadow appearance-none border border-gray-400 rounded-full py-4 px-5 text-gray-700 text-[13px] leading-tight focus:outline-none focus:shadow-outline placeholder:text-gray-500 placeholder:text-[13px]"
                         rows='1.5'
                         placeholder="Type your message..."
                         onInput={adjustTextareaHeight}
@@ -146,11 +162,11 @@ const Chat = ({ contact, setToggle, showMessage }) => {
                     <button className='' type='submit'>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            fill="teal"
+                            fill="pink"
                             viewBox="0 0 24 24"
                             strokeWidth={1.5}
                             stroke="currentColor"
-                            className="w-12 h-8 text-gray-300"
+                            className="w-12 h-8 text-pink-500"
                         >
                             <path
                                 strokeLinecap="round"

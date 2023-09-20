@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Placeholder from '../assets/profile/placeholder.jpg';
 import axios from 'axios';
+import { DatetoString } from '../utils/Date';
 
 const Messages = ({ onClick }) => {
     const token = sessionStorage.getItem('authToken');
@@ -62,26 +63,38 @@ const Messages = ({ onClick }) => {
                     .slice()
                     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                     .map((message, index) => (
-                        <div key={index} className='mb-3 text-white'>
+                        <div key={index} className='mb-3 text-white '>
                             <div className='flex items-center py-1'>
                                 <img
                                     src={user === message.sender._id ? (message.receiver.image || Placeholder) : (message.sender.image || Placeholder)}
-                                    className='h-11 w-11 rounded-full object-cover'
+                                    className='h-11 w-11 rounded-full object-cover border'
                                 />
 
                                 <div className='ms-2'>
                                     {user === message.sender._id ? (
-                                        <div className='cursor-pointer' onClick={() => onClick(message.receiver._id)}>
-                                            <h6 className='text-[14px]'>{`${message.receiver.firstname} ${message.receiver.lastname}`}</h6>
-                                            <p className='text-[11px] text-gray-400 truncate'>{`You: ${message.message}`}</p>
+                                        <div className='flex items-center'>
+                                            <div className='cursor-pointer' onClick={() => onClick(message.receiver._id)}>
+                                                <h6 className='text-[14px] text-gray-700'>{`${message.receiver.firstname} ${message.receiver.lastname}`}</h6>
+                                                <div className='flex items-center'>
+                                                    <p className='text-[11px] text-gray-400 truncate max-w-[140px]'>{`You: ${message.message}`}</p>
+                                                    <p className='text-gray-500 text-[11px] ms-2'>{DatetoString(message.createdAt)}</p>
+                                                </div>
+
+                                            </div>
                                         </div>
                                     ) : (
                                         <div className='cursor-pointer' onClick={() => onClick(message.sender._id)}>
-                                            <h6 className='text-[14px]'>{`${message.sender.firstname} ${message.sender.lastname}`}</h6>
-                                            <p className='text-[11px] text-gray-400 truncate'>{message.message}</p>
+                                            <h6 className='text-[14px] text-gray-700'>{`${message.sender.firstname} ${message.sender.lastname}`}</h6>
+                                            <div className='flex items-center'>
+                                                <p className='text-[11px] text-gray-400 truncate'>{message.message}</p>
+                                                <p className='text-gray-500 text-[11px] ms-2'>{DatetoString(message.createdAt)}</p>
+                                            </div>
+
                                         </div>
+
                                     )}
                                 </div>
+
                             </div>
                         </div>
                     ))

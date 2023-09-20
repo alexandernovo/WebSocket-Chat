@@ -4,6 +4,8 @@ import Logo from '../assets/images/logo.png'
 import Input from '../components/Input';
 import Button from '../components/Button';
 import { useState } from 'react';
+import Nav from '../components/Nav'
+import Girl from '../assets/images/bg-girl.jpg'
 import axios from 'axios';
 
 const Register = () => {
@@ -69,101 +71,102 @@ const Register = () => {
     }
 
     return (
-        <div className='px-2 lg:px-0 md:px-0 pb-6'>
-
-            <div className='w-full lg:w-2/6 md:w-2/6 mx-auto mt-10 glass shadow-none md:shadow-lg lg:shadow-lg p-10 rounded-xl '>
-
-                <div className='flex items-center mb-5'>
-                    <img className='w-[90px] h-[90px]' src={Logo} alt='Logo' />
-                    <h1 className='text-4xl font-bold text-white tracking-widest'>ChatMe</h1>
-                </div>
-
-                <form onSubmit={handleSubmit}>
-                    {success && (
-                        <div className='bg-green-500 rounded-lg py-2 px-2 flex items-center text-white'>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 me-1">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <p className='m-0 text-[12px]'>{success}</p>
+        <div className='h-full'>
+            <Nav />
+            <div className='h-full flex px-5 items-center'>
+                <div className='w-1/2 flex items-center justify-center'>
+                    <div className='w-2/4 mx-auto'>
+                        <div className='flex items-center mb-2'>
+                            <h1 className='text-[27px] font-bold text-black tracking-wider'>Sign Up Here</h1>
                         </div>
-                    )}
-                    <div className='mt-3'>
-                        <Input
-                            classes="bck"
-                            label='Firstname'
-                            id='firstname'
-                            type='text'
-                            name="firstname"
-                            placeholder='Firstname'
-                            value={formData.firstname}
-                            onChange={handleInputs}
-                        />
-                    </div>
-                    <div className='mt-3'>
-                        <Input
-                            classes="bck"
-                            label='Lastname'
-                            id='lastname'
-                            name='lastname'
-                            type='text'
-                            placeholder='Lastname'
-                            value={formData.lastname}
-                            onChange={handleInputs}
-                        />
-                    </div>
-                    <div className='mt-3'>
-                        <Input
-                            classes="bck"
-                            label='Username'
-                            id='username'
-                            name='username'
-                            type='text'
-                            placeholder='Username'
-                            value={formData.username}
-                            onChange={handleInputs}
-                        />
-                    </div>
+                        <form onSubmit={handleSubmit}>
+                            {success && (
+                                <div className='bg-green-500 rounded-lg py-2 px-2 flex items-center text-white'>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 me-1">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <p className='m-0 text-[12px]'>{success}</p>
+                                </div>
+                            )}
+                            <div className='mt-3'>
+                                <Input
+                                    label='Firstname'
+                                    id='firstname'
+                                    type='text'
+                                    name="firstname"
+                                    placeholder='Firstname'
+                                    value={formData.firstname}
+                                    onChange={handleInputs}
+                                />
+                            </div>
+                            <div className='mt-3'>
+                                <Input
+                                    label='Lastname'
+                                    id='lastname'
+                                    name='lastname'
+                                    type='text'
+                                    placeholder='Lastname'
+                                    value={formData.lastname}
+                                    onChange={handleInputs}
+                                />
+                            </div>
+                            <div className='mt-3'>
+                                <Input
+                                    label='Username'
+                                    id='username'
+                                    name='username'
+                                    type='text'
+                                    placeholder='Username'
+                                    value={formData.username}
+                                    onChange={handleInputs}
+                                />
+                            </div>
 
-                    {error.errorCall === 'username' && (
-                        <p className='m-0 text-[12px] text-yellow-400 mt-1'>{error.message}</p>
-                    )}
-                    <div className='mt-3'>
-                        <Input
-                            classes="bck"
-                            label='Password'
-                            id='password'
-                            name='password'
-                            type='password'
-                            placeholder='Password'
-                            value={formData.password}
-                            onChange={handleInputs}
-                        />
-                    </div>
-                    <div className='mt-3'>
-                        <Input
-                            classes="bck"
-                            label='Confirm Password'
-                            id='confirmpassword'
-                            name='confirmpassword'
-                            type='password'
-                            placeholder='Confirm Password'
-                            value={formData.confirmpassword}
-                            onChange={handleInputs}
-                        />
-                    </div>
-                    {error.errorCall === 'password' && (
-                        <p className='m-0 text-[12px] text-yellow-400 mt-1'>{error.message}</p>
-                    )}
+                            {error.errorCall === 'username' && (
+                                <p className='m-0 text-[12px] text-red-500 mt-1'>{error.message}</p>
+                            )}
+                            <div className='mt-3'>
+                                <Input
+                                    label='Password'
+                                    id='password'
+                                    name='password'
+                                    type='password'
+                                    placeholder='Password'
+                                    value={formData.password}
+                                    onChange={handleInputs}
+                                />
+                            </div>
+                            <div className='mt-3'>
+                                <Input
+                                    label='Confirm Password'
+                                    id='confirmpassword'
+                                    name='confirmpassword'
+                                    type='password'
+                                    placeholder='Confirm Password'
+                                    value={formData.confirmpassword}
+                                    onChange={handleInputs}
+                                />
+                            </div>
+                            {error.errorCall === 'password' && (
+                                <p className='m-0 text-[12px] text-red-500 mt-1'>{error.message}</p>
+                            )}
 
-                    <div className='mb-3'>
-                        <Button type="submit">SIGN UP</Button>
-                        <p className='text-white text-[13px] text-center mt-2'>
-                            Already have account?
-                            <Link to="/" className='text-blue-800 ms-1'>Sign in here </Link>
-                        </p>
-                    </div>
+                            <div className='mb-3'>
+                                <Button type="submit">SIGN UP</Button>
+                                <p className='text-gray-400 text-[13px] text-center mt-2'>
+                                    Already have account?
+                                    <Link to="/" className='text-blue-400 ms-1'>Sign in here </Link>
+                                </p>
+                            </div>
 
-                </form>
+                        </form>
+                    </div>
+                </div>
+                <div className='w-1/2 flex items-center'>
+                    <div className='w-3/4 h-auto m-auto'>
+                        <img src={Girl} className='object-fit h-full w-full' />
+                    </div>
+                </div>
             </div>
         </div>
     )

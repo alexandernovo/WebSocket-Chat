@@ -4,6 +4,7 @@ import ChatBox from '../components/ChatBox'
 import Sidebar from '../components/Sidebar'
 import Profile from '../components/Profile'
 import axios from 'axios'
+import Nav from '../components/Nav'
 
 const Home = () => {
     const [contact, setContact] = useState({});

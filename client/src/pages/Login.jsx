@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import axios from 'axios';
+import Girl from '../assets/images/bg-girl.jpg'
+import Nav from '../components/Nav'
 
 const Login = () => {
 
@@ -36,51 +38,56 @@ const Login = () => {
     };
 
     return (
-        <div className='px-2 lg:px-0 md:px-0'>
-            <div className='w-full lg:w-2/6 md:w-2/6 mx-auto mt-10 glass shadow-none md:shadow-lg lg:shadow-lg p-10 rounded-xl '>
-                <div className='flex items-center mb-5'>
-                    <img className='w-[90px] h-[90px]' src={Logo} alt='Logo' />
-                    <h1 className='text-4xl font-bold text-white tracking-widest'>ChatMe</h1>
+        <div className='h-full'>
+            <Nav />
+            <div className='h-4/5 flex px-5'>
+                <div className='w-1/2 flex items-center justify-center'>
+                    <div className='w-2/4 m-auto'>
+                        <div className='flex items-center mb-2'>
+                            <h1 className='text-[27px] font-bold text-black tracking-wider'>Sign In Here</h1>
+                        </div>
+                        <form onSubmit={handleSubmit}>
+                            <div className='mt-2'>
+                                <Input
+                                    label='Username'
+                                    id='username'
+                                    type='text'
+                                    placeholder='Username'
+                                    value={username}
+                                    onChange={handleUsernameChange}
+                                />
+                            </div>
+                            {error.errorCall === 'username' && (
+                                <p className='m-0 text-[12px] text-red-500 mt-1'>{error.message}</p>
+                            )}
+                            <div className='mt-3'>
+                                <Input
+                                    label='Password'
+                                    id='password'
+                                    type='password'
+                                    placeholder='Password'
+                                    value={password}
+                                    onChange={handlePasswordChange}
+                                />
+                            </div>
+                            {error.errorCall === 'password' && (
+                                <p className='m-0 text-[12px] text-red-500 mt-1'>{error.message}</p>
+                            )}
+                            <div className='mb-3'>
+                                <Button type="submit">SIGN IN</Button>
+                                <p className='text-gray-400 text-[13px] text-center mt-2'>
+                                    Don`t have an account yet? <Link to='/register' className='text-blue-400 ms-1'>Sign up here </Link>
+                                </p>
+                            </div>
+
+                        </form>
+                    </div>
                 </div>
-
-                <form onSubmit={handleSubmit}>
-                    <div className='mt-3'>
-                        <Input
-                            classes="bck"
-                            label='Username'
-                            id='username'
-                            type='text'
-                            placeholder='Username'
-                            value={username}
-                            onChange={handleUsernameChange}
-                        />
+                <div className='w-1/2 flex items-center'>
+                    <div className='w-3/4 h-auto m-auto'>
+                        <img src={Girl} className='object-fit h-full w-full' />
                     </div>
-                    {error.errorCall === 'username' && (
-                        <p className='m-0 text-[12px] text-yellow-400 mt-1'>{error.message}</p>
-                    )}
-                    <div className='mt-3'>
-                        <Input
-                            classes="bck"
-                            label='Password'
-                            id='password'
-                            type='password'
-                            placeholder='Password'
-                            value={password}
-                            onChange={handlePasswordChange}
-                        />
-                    </div>
-                    {error.errorCall === 'password' && (
-                        <p className='m-0 text-[12px] text-yellow-400 mt-1'>{error.message}</p>
-                    )}
-                    <div className='mb-3'>
-                        <Button type="submit">SIGN IN</Button>
-                        <p className='text-white text-[13px] text-center mt-2'>
-                            No Account? <Link to='/register' className='text-blue-800 ms-1'>Sign up here </Link>
-                        </p>
-                    </div>
-
-                </form>
-
+                </div>
             </div>
         </div>
     );

@@ -14,8 +14,6 @@
 }
 body {
   height: 100vh;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
-    url("./assets/images/bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -84,4 +82,15 @@ body {
 
 .border-custom {
   border-bottom: 0.5px solid rgb(170, 170, 170);
+}
+
+.center-placeholder::before {
+  content: "";
+  display: inline-block;
+  height: 50%; /* Adjust this value to move the text up or down */
+  vertical-align: middle;
+}
+
+.center-placeholder {
+  line-height: normal; /* Reset the line-height */
 }
