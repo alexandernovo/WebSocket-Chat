@@ -5,16 +5,18 @@ class ChatRoute {
 
     constructor() {
         this.router = express.Router();
+        this.chatController = new ChatController();
         this.setupRoutes();
     }
 
     setupRoutes() {
-        const chatController = new ChatController();
-        this.router.post('/sendMessage', chatController.sendMessage.bind(chatController));
-        this.router.get('/getMessage', chatController.getMessage.bind(chatController));
-        this.router.get('/getMessages', chatController.getMessages.bind(chatController));
+        this.router.post('/sendMessage', this.chatController.sendMessage.bind(this.chatController));
+        this.router.get('/getMessage', this.chatController.getMessage.bind(this.chatController));
+        this.router.get('/getMessages', this.chatController.getMessages.bind(this.chatController));
     }
-
+    handleSocket(io, socket) {
+        this.chatController.socketController(io, socket);
+    }
     getRouter() {
         return this.router;
     }

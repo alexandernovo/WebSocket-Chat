@@ -6,7 +6,9 @@ const verifyToken = require('../utils/verifyToken');
 class ChatController {
 
     constructor() {
-        this.chatModel = new Chat(); // Define userModel as an instance property
+        this.chatModel = new Chat();
+        this.onlineUsers = new Set();
+
     }
 
     sendMessage = asyncHandler(async (req, res) => {
@@ -81,6 +83,74 @@ class ChatController {
             res.status(500).json({ message: error });
         }
     });
+
+    socketController = (io, socket) => {
+
+        socket.on('setOnlineUsers', (token) => {
+            const bearerToken = `Bearer ${token}`;
+            const decoded = verifyToken(bearerToken);
+            if (decoded) {
+                this.onlineUsers.add(decoded.userId);
+                this.updateOnlineUsers(io);  // Update online users when a user connects
+            }
+        });
+
+        socket.on('privateMessage', async (data) => {
+            const { receiver, message, senderToken } = data;
+
+            try {
+                const bearerToken = `Bearer ${senderToken}`;
+                const decoded = verifyToken(bearerToken);
+                if (decoded) {
+                    const chatData = {
+                        sender: decoded.userId,
+                        receiver,
+                        message
+                    };
+
+                    const chat = await this.chatModel.createChatMessage(chatData);
+                    try {
+                        const chatMessages = await this.chatModel.getChatMessages(decoded.userId, receiver);
+                        socket.join(receiver);
+                        console.log('Join Room Send:', receiver);
+                        io.to(receiver).emit('Messages', chatMessages);
+                    } catch (error) {
+                        console.log('Cannot Emit Messages');
+                    }
+
+                } else {
+                    console.error('Invalid sender token');
+                }
+            } catch (error) {
+                console.error('Error handling private message:', error);
+            }
+        });
+
+        socket.on('joinRoom', async (data) => {
+            if (data) {
+                const { receiver, sender } = data;
+                const chatMessages = await this.chatModel.getChatMessages(sender, receiver);
+                socket.join(receiver);
+                console.log('Join Room Send:', receiver);
+                io.to(receiver).emit('Messages', chatMessages);
+            }
+
+        })
+
+        socket.on('disconnect', () => {
+            console.log('A user disconnected from the WebSocket.');
+
+            // Remove user from the online users set
+            this.onlineUsers.delete(socket.id);
+
+            // Notify all clients about the updated online users
+            this.updateOnlineUsers(io);
+        });
+    }
+
+    updateOnlineUsers(io) {
+        io.emit('onlineUsers', Array.from(this.onlineUsers));
+    }
 
 }
 

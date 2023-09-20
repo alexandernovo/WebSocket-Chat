@@ -3,24 +3,50 @@ import Layout from '../layout/Layout'
 import ChatBox from '../components/ChatBox'
 import Sidebar from '../components/Sidebar'
 import Profile from '../components/Profile'
+import { getSessionData } from '../utils/Session';
 import axios from 'axios'
 import Nav from '../components/Nav'
+import io from 'socket.io-client';
 
 const Home = () => {
     const [contact, setContact] = useState({});
     const [localContact, setLocalContact] = useState(localStorage.getItem('contactID'));
     const [toggle, setToggle] = useState(false);
     const [showMessage, setShowMessage] = useState(true);
+    const [userID, setUserID] = useState(null);
     const [showProfile, setShowProfile] = useState(false);
+    const [socketInstance, setSocketInstance] = useState(null);
 
     //change the contact localstorage and to activate dependencies and to refetch messages in a selected contact
     // Change the contact local storage and activate dependencies to refetch messages for the selected contact
+
+    useEffect(() => {
+        const socket = io('http://localhost:5000');
+        setSocketInstance(socket);
+
+        // Clean up socket when component is unmounted
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await getSessionData();
+            setUserID(response.data._id);
+        };
+        fetchData();
+    }, []);
+
     const handleContact = (id) => {
         localStorage.setItem('contactID', id);
         setLocalContact(id);
         setShowMessage(false);
         setShowProfile(false);
 
+        if (socketInstance && localContact) {
+            socketInstance.emit('joinRoom', { sender: userID, receiver: localContact });
+        }
         // Use a function reference inside setTimeout
         const messageTimeout = setTimeout(() => {
             setShowMessage(true);

@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Placeholder from '../assets/profile/placeholder.jpg';
+import io from 'socket.io-client';
+import { getSessionData } from '../utils/Session';
 import axios from 'axios';
 
 const Chat = ({ contact, setToggle, showMessage }) => {
@@ -8,8 +10,9 @@ const Chat = ({ contact, setToggle, showMessage }) => {
     const [messages, setMessages] = useState([]);
     const [refresh, setRefresh] = useState(false);
     const token = sessionStorage.getItem('authToken');
+    const [userID, setUserID] = useState(null);
     const messagesEndRef = useRef(null);
-
+    const [socketInstance, setSocketInstance] = useState(null);
     const chatContainerRef = useRef(null);
     let previousScrollHeight = 0; // Initialize previousScrollHeight
 
@@ -19,7 +22,6 @@ const Chat = ({ contact, setToggle, showMessage }) => {
             container.scrollTop = container.scrollHeight;
         }
     };
-
     useEffect(() => {
         scrollToBottom();
 
@@ -35,60 +37,62 @@ const Chat = ({ contact, setToggle, showMessage }) => {
             clearInterval(interval);
         };
     }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await getSessionData();
+            setUserID(response.data._id);
+        };
+        fetchData();
+    }, []);
+    // Initialize socket only once
+    useEffect(() => {
+        const socket = io('http://localhost:5000');
+        setSocketInstance(socket);
 
+        // Clean up socket when component is unmounted
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
+
+    // Handle sending a message
     const handleSendMessage = (event) => {
         event.preventDefault();
-
         if (token) {
-            axios.post('/api/chat/sendMessage', { receiverID: contact._id, message: chat },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            ).then((response) => {
-                if (response.data.status === 'success') {
-                    setRefresh(!refresh);
-                    const textarea = textareaRef.current;
-                    textarea.style.height = 'auto';
-                    setChat('');
-                }
-            }).catch((error) => {
-                console.log('Sending Message Failed: ', error);
+            const contact_id = contact._id;
+            const socket = socketInstance; // Use the initialized socket
+            socket.emit('privateMessage', {
+                receiver: contact_id,
+                message: chat,
+                senderToken: token
             });
+            setRefresh(!refresh);
+            const textarea = textareaRef.current;
+            textarea.style.height = 'auto';
+            setChat('');
         }
     };
 
     useEffect(() => {
-        const fetchMessages = () => {
-            if (token) {
-                axios.get('/api/chat/getMessage', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    params: {
-                        receiverID: contact._id,
-                    },
-                }).then((response) => {
-                    setMessages(response.data.data);
-                }).catch((error) => {
-                    console.log('Error Getting Messages: ', error);
-                });
+        // Attach event listener for receiving messages
+        const socket = socketInstance;
+        if (socket && contact) {
+            socket.emit('joinRoom', { sender: userID, receiver: contact._id });
+            socket.on('Messages', (newMessages) => {
+                setMessages(newMessages);
+            });
+
+            if (messages.length === 0) {
+                socket.emit('joinRoom', { sender: userID, receiver: localStorage.getItem('contactID') });
+            }
+        }
+        // Clean up event listener
+        return () => {
+            if (socket) {
+                socket.off('Messages');
             }
         };
-
-        fetchMessages();
-
-        const interval = setInterval(fetchMessages, 5000);
-
-        return () => {
-            clearInterval(interval);
-        };
-    }, [contact._id, refresh]);
-
-    useEffect(() => {
-
-    }, [])
+    }, [contact._id, socketInstance]);
 
     const adjustTextareaHeight = () => {
         if (textareaRef.current) {
@@ -125,13 +129,23 @@ const Chat = ({ contact, setToggle, showMessage }) => {
             <div className='flex-1 p-3 overflow-x-auto' ref={chatContainerRef}>
                 {showMessage ? (
                     messages && messages.length !== 0 ? (
-                        messages.map((message) => (
-                            <div key={message._id} className={`flex ${message.receiver === contact._id ? 'justify-end' : 'justify-start'} mb-2 `}>
-                                <div className={`flex ${message.receiver === contact._id ? 'bg-blue-500' : 'bg-pink-500'} p-2 px-3 rounded-lg max-w-[500px] item-center`}>
-                                    <p className='break-all whitespace-pre-wrap text-white text-[14px]'>{message.message}</p>
-                                </div>
-                            </div>
-                        ))
+                        messages.map((message, index) => {
+                            const isReceivedByContact = message.receiver === contact._id;
+                            const justifyClass = isReceivedByContact ? 'justify-end' : 'justify-start';
+                            const bgClass = isReceivedByContact ? 'bg-blue-500' : 'bg-pink-500';
+
+                            if (message.receiver === contact._id || message.sender === contact._id) {
+                                return (
+                                    <div key={index} className={`flex ${justifyClass} mb-2`}>
+                                        <div className={`flex ${bgClass} p-2 px-3 rounded-lg max-w-[500px] item-center`}>
+                                            <p className='break-all whitespace-pre-wrap text-white text-[14px]'>{message.message}</p>
+                                        </div>
+                                    </div>
+                                );
+                            } else {
+                                <p className='text-gray-300 text-center text-[13px]'>No Conversation Started.</p>
+                            }
+                        })
                     ) : (
                         <p className='text-gray-300 text-center text-[13px]'>No Conversation Started.</p>
                     )
@@ -152,7 +166,7 @@ const Chat = ({ contact, setToggle, showMessage }) => {
 
                     <textarea
                         ref={textareaRef}
-                        className="center-placeholder shadow-lg overflow-hidden flex items-center resize-none border border-gray-200 rounded max-h-70 w-full shadow appearance-none border border-gray-400 rounded-full py-4 px-5 text-gray-700 text-[13px] leading-tight focus:outline-none focus:shadow-outline placeholder:text-gray-500 placeholder:text-[13px]"
+                        className="center-placeholder shadow-lg overflow-hidden flex items-center bg-gray-100 resize-none border border-pink-100 rounded max-h-70 w-full shadow appearance-none border border-gray-400 rounded-full py-4 px-5 text-gray-700 text-[13px] leading-tight focus:outline-none focus:shadow-outline placeholder:text-gray-500 placeholder:text-[13px]"
                         rows='1.5'
                         placeholder="Type your message..."
                         onInput={adjustTextareaHeight}

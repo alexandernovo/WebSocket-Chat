@@ -18,7 +18,7 @@ const Input = ({ label, id, name, type, placeholder, value, onChange, classes, o
                 onClick={onClick}
                 required
             />
-            <label for={id} class="absolute text-sm text-gray-500 px-2 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:bg-white peer-focus:scale-75 peer-focus:-translate-y-6">{label}</label>
+            <label htmlFor={id} className="absolute text-sm text-gray-500 px-2 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:bg-white peer-focus:scale-75 peer-focus:-translate-y-6">{label}</label>
         </div>
     );
 };
