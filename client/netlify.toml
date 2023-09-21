@@ -2,3 +2,8 @@
   from = "/api/*"
   to = "https://chat-app-xsxm.onrender.com/api/:splat"
   status = 307
+
+[[redirects]]
+  from = "/"
+  to = "./index.html"
+  status = 301
