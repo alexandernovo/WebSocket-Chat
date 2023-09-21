@@ -111,9 +111,9 @@ class ChatController {
                     const chat = await this.chatModel.createChatMessage(chatData);
                     try {
                         const chatMessages = await this.chatModel.getChatMessages(decoded.userId, receiver);
-                        socket.join(receiver);
+                        socket.join(`${decoded.userId}_to_${receiver}`);
                         console.log('Join Room Send:', receiver);
-                        io.to(receiver).emit('Messages', chatMessages);
+                        io.to(`${decoded.userId}_to_${receiver}`).emit('Messages', chatMessages);
                     } catch (error) {
                         console.log('Cannot Emit Messages');
                     }
@@ -130,9 +130,9 @@ class ChatController {
             if (data) {
                 const { receiver, sender } = data;
                 const chatMessages = await this.chatModel.getChatMessages(sender, receiver);
-                socket.join(receiver);
+                socket.join(`${sender}_to_${receiver}`);
                 console.log('Join Room Send:', receiver);
-                io.to(receiver).emit('Messages', chatMessages);
+                io.to(`${sender}_to_${receiver}`).emit('Messages', chatMessages);
             }
 
         })

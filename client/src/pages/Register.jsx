@@ -73,11 +73,11 @@ const Register = () => {
     return (
         <div className='h-full'>
             <Nav />
-            <div className='h-full flex px-5 items-center'>
-                <div className='w-1/2 flex items-center justify-center'>
-                    <div className='w-2/4 mx-auto'>
+            <div className='h-full flex px-5 items-center lg:h-4/5 md:h-4/5 flex-col lg:flex-row md:flex:row px-5'>
+                <div className='w-full lg:w-1/2 md:w-1/2 flex items-center justify-center order-last md:order-1 lg:order-1 mt-5 md:mt-0 lg:mt-0 '>
+                    <div className='w-full lg:w-2/4 md:w-2/4 mx-auto mb-12 lg:mb-0 md:mb-0'>
                         <div className='flex items-center mb-2'>
-                            <h1 className='text-[27px] font-bold text-black tracking-wider'>Sign Up Here</h1>
+                            <h1 className='text-[24px] md:text-[27px] lg:text-[27px] font-bold text-black tracking-wider text-pink-600'>Sign up Here</h1>
                         </div>
                         <form onSubmit={handleSubmit}>
                             {success && (
@@ -162,7 +162,7 @@ const Register = () => {
                         </form>
                     </div>
                 </div>
-                <div className='w-1/2 flex items-center'>
+                <div className='w-full lg:w-1/2 md:w-1/2 flex items-center order-1 mt-8 md:mt-0 lg:mt-0'>
                     <div className='w-3/4 h-auto m-auto'>
                         <img src={Girl} className='object-fit h-full w-full' />
                     </div>
