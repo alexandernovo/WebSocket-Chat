@@ -46,7 +46,7 @@ const Chat = ({ contact, setToggle, showMessage }) => {
     }, []);
     // Initialize socket only once
     useEffect(() => {
-        const socket = io('http://localhost:5000');
+        const socket = io(import.meta.env.VITE_API_URL);
         setSocketInstance(socket);
 
         // Clean up socket when component is unmounted

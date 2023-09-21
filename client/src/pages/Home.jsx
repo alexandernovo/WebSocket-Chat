@@ -21,7 +21,7 @@ const Home = () => {
     // Change the contact local storage and activate dependencies to refetch messages for the selected contact
 
     useEffect(() => {
-        const socket = io('http://localhost:5000');
+        const socket = io(import.meta.env.VITE_API_URL);
         setSocketInstance(socket);
 
         // Clean up socket when component is unmounted

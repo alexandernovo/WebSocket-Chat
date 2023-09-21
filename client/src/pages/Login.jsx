@@ -8,7 +8,6 @@ import Girl from '../assets/images/bg-girl.jpg'
 import Nav from '../components/Nav'
 
 const Login = () => {
-
     const [username, setUsername] = useState('');
     const navigate = useNavigate();
     const [password, setPassword] = useState('');
@@ -43,7 +42,7 @@ const Login = () => {
             <div className='h-full overflow-y-auto lg:h-4/5 md:h-4/5 flex flex-col lg:flex-row md:flex:row px-5'>
                 <div className='w-full lg:w-1/2 md:w-1/2 flex items-center justify-center order-last md:order-1 lg:order-1  mt-5 md:mt-0 lg:mt-0'>
                     <div className='w-full lg:w-2/4 md:w-2/4 m-auto'>
-                        <p className='text-[24px] md:text-[43px] lg:text-[43px] font-bold text-black tracking-wider text-pink-600'>Welcome Back,</p>
+                        <p className='text-[24px] md:text-[43px] lg:text-[35px] font-bold text-black tracking-wider text-pink-600'>Welcome Back,</p>
                         <p className='text-[12px] md:text-[27px] lg:text-[15px] font-bold text-black tracking-wider text-gray-400 mt-1 lg:mt-3 md:mt-3'>ChatMe gets you closer with your love ones.</p>
                         <form onSubmit={handleSubmit}>
                             <div className='mt-2'>
