@@ -24,8 +24,6 @@ const Messages = ({ onClick }) => {
     useEffect(() => {
         const socket = io(import.meta.env.VITE_API_URL);
         setSocketInstance(socket);
-        socket.emit('joinRoom', userID);
-
         // Clean up socket when component is unmounted
         return () => {
             socket.disconnect();

@@ -8,13 +8,20 @@ const Chat = ({ contact, setToggle, showMessage }) => {
     const [chat, setChat] = useState('');
     const textareaRef = useRef(null);
     const [messages, setMessages] = useState([]);
-    const [refresh, setRefresh] = useState(false);
     const token = sessionStorage.getItem('authToken');
     const [userID, setUserID] = useState(null);
     const messagesEndRef = useRef(null);
-    const [socketInstance, setSocketInstance] = useState(null);
+    const socketInstance = useRef(null); // Use useRef here
     const chatContainerRef = useRef(null);
     let previousScrollHeight = 0; // Initialize previousScrollHeight
+
+    useEffect(() => {
+        socketInstance.current = io(import.meta.env.VITE_API_URL); // Use .current property
+
+        return () => {
+            socketInstance.current.disconnect(); // Use .current property
+        };
+    }, []);
 
     const scrollToBottom = () => {
         const container = chatContainerRef.current;
@@ -22,6 +29,7 @@ const Chat = ({ contact, setToggle, showMessage }) => {
             container.scrollTop = container.scrollHeight;
         }
     };
+
     useEffect(() => {
         scrollToBottom();
 
@@ -37,6 +45,7 @@ const Chat = ({ contact, setToggle, showMessage }) => {
             clearInterval(interval);
         };
     }, []);
+
     useEffect(() => {
         const fetchData = async () => {
             const response = await getSessionData();
@@ -44,29 +53,18 @@ const Chat = ({ contact, setToggle, showMessage }) => {
         };
         fetchData();
     }, []);
-    // Initialize socket only once
-    useEffect(() => {
-        const socket = io(import.meta.env.VITE_API_URL);
-        setSocketInstance(socket);
-
-        // Clean up socket when component is unmounted
-        return () => {
-            socket.disconnect();
-        };
-    }, []);
 
     // Handle sending a message
     const handleSendMessage = (event) => {
         event.preventDefault();
         if (token) {
             const contact_id = contact._id;
-            const socket = socketInstance; // Use the initialized socket
+            const socket = socketInstance.current; // Use .current property
             socket.emit('privateMessage', {
                 receiver: contact_id,
                 message: chat,
                 senderToken: token
             });
-            setRefresh(!refresh);
             const textarea = textareaRef.current;
             textarea.style.height = 'auto';
             setChat('');
@@ -74,25 +72,44 @@ const Chat = ({ contact, setToggle, showMessage }) => {
     };
 
     useEffect(() => {
-        // Attach event listener for receiving messages
-        const socket = socketInstance;
-        if (socket && contact) {
-            socket.emit('joinRoom', { sender: userID, receiver: contact._id });
-            socket.on('Messages', (newMessages) => {
-                setMessages(newMessages);
+        axios.get('/api/chat/getMessage', {
+            headers: { Authorization: `Bearer ${token}` },
+            params: {
+                receiverID: contact._id
+            }
+        })
+            .then(response => {
+                setMessages(response.data.data);  // Update the messages state when new messages are received
+            })
+            .catch(error => {
+                console.log('Cannote Get Messages: ', error);
+            });
+    }, [contact._id]);
+
+    useEffect(() => {
+        const socket = socketInstance.current; // Use .current property
+
+        if (socket && contact && token) {
+            // Remove any existing listeners before adding new ones
+            socket.off('Messages');
+
+            socket.emit('joinRoom', { sender: token, receiver: contact._id });
+            socket.on('Messages', (newMessage) => {
+                setMessages((prevMessages) => [...prevMessages, newMessage]);  // Append new message to the existing ones
             });
 
-            if (messages.length === 0) {
-                socket.emit('joinRoom', { sender: userID, receiver: localStorage.getItem('contactID') });
+            if (messages.length === 0 && localStorage.getItem('contactID') !== contact._id) {
+                socket.emit('joinRoom', { sender: token, receiver: localStorage.getItem('contactID') });
             }
         }
-        // Clean up event listener
+
         return () => {
             if (socket) {
                 socket.off('Messages');
             }
         };
-    }, [contact._id, socketInstance]);
+    }, [contact._id]);
+
 
     const adjustTextareaHeight = () => {
         if (textareaRef.current) {
