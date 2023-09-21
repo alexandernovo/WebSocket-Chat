@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Placeholder from '../assets/profile/placeholder.jpg';
 import io from 'socket.io-client';
-import { getSessionData } from '../utils/Session';
 import axios from 'axios';
 
 const Chat = ({ contact, setToggle, showMessage }) => {
@@ -9,7 +8,6 @@ const Chat = ({ contact, setToggle, showMessage }) => {
     const textareaRef = useRef(null);
     const [messages, setMessages] = useState([]);
     const token = sessionStorage.getItem('authToken');
-    const [userID, setUserID] = useState(null);
     const messagesEndRef = useRef(null);
     const socketInstance = useRef(null); // Use useRef here
     const chatContainerRef = useRef(null);
@@ -46,14 +44,6 @@ const Chat = ({ contact, setToggle, showMessage }) => {
         };
     }, []);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await getSessionData();
-            setUserID(response.data._id);
-        };
-        fetchData();
-    }, []);
-
     // Handle sending a message
     const handleSendMessage = (event) => {
         event.preventDefault();
@@ -87,7 +77,7 @@ const Chat = ({ contact, setToggle, showMessage }) => {
     }, [contact._id]);
 
     useEffect(() => {
-        const socket = socketInstance.current; // Use .current property
+        const socket = socketInstance.current;
 
         if (socket && contact && token) {
             // Remove any existing listeners before adding new ones

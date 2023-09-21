@@ -30,17 +30,21 @@ export default function Dropdown({ handleProfile }) {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
             >
-                <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right text-white rounded-md glass shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right text-white rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
                     <div className="py-1">
                         <Menu.Item>
                             {({ active }) => (
                                 <button
                                     onClick={() => handleProfile()}
                                     className={classNames(
-                                        active ? 'bg-gray-600 text-white w-full text-start' : 'text-gray-300',
-                                        'block px-4 py-2 text-sm hover:bg-gray-800 rounded w-full text-start'
+                                        active ? 'bg-gray-600 text-white w-full text-start' : 'text-gray-500',
+                                        'block px-4 py-2 text-sm hover:bg-pink-600 rounded w-full text-start flex items-center'
                                     )}
                                 >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 me-1">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+
                                     Account settings
                                 </button>
                             )}
@@ -50,10 +54,14 @@ export default function Dropdown({ handleProfile }) {
                                 <button
                                     onClick={() => Logout(navigate)} // Add this line for logout
                                     className={classNames(
-                                        active ? 'bg-gray-600 text-white' : 'text-gray-300',
-                                        'block w-full px-4 py-2 text-left text-sm hover:bg-gray-800 rounded'
+                                        active ? 'bg-gray-500 text-white' : 'text-gray-500',
+                                        'block w-full px-4 py-2 text-left text-sm hover:bg-pink-600 rounded flex items-center'
                                     )}
                                 >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 me-1">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                                    </svg>
+
                                     Sign out
                                 </button>
                             )}
