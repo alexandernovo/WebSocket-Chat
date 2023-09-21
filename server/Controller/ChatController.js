@@ -110,8 +110,13 @@ class ChatController {
 
                     const chat = await this.chatModel.createChatMessage(chatData);
                     try {
-                        io.to(`${decoded.userId}_to_${receiver}`).emit('Messages', chat);
-                        io.to(`${receiver}_to_${decoded.userId}`).emit('Messages', chat);
+                        if (decoded.userId == receiver) {
+                            io.to(`${decoded.userId}_to_${receiver}`).emit('Messages', chat);
+                        } else {
+                            io.to(`${decoded.userId}_to_${receiver}`).emit('Messages', chat);
+                            io.to(`${receiver}_to_${decoded.userId}`).emit('Messages', chat);
+                        }
+
                     } catch (error) {
                         console.log('Cannot Emit Messages');
                     }
