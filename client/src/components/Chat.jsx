@@ -87,10 +87,6 @@ const Chat = ({ contact, setToggle, showMessage }) => {
             socket.on('Messages', (newMessage) => {
                 setMessages((prevMessages) => [...prevMessages, newMessage]);  // Append new message to the existing ones
             });
-
-            if (messages.length === 0 && localStorage.getItem('contactID') !== contact._id) {
-                socket.emit('joinRoom', { sender: token, receiver: localStorage.getItem('contactID') });
-            }
         }
 
         return () => {

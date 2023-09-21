@@ -44,9 +44,6 @@ const Home = () => {
         setShowMessage(false);
         setShowProfile(false);
 
-        if (socketInstance && localContact) {
-            socketInstance.emit('joinRoom', { sender: userID, receiver: localContact });
-        }
         // Use a function reference inside setTimeout
         const messageTimeout = setTimeout(() => {
             setShowMessage(true);
