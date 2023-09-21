@@ -137,7 +137,7 @@ const Chat = ({ contact, setToggle, showMessage }) => {
                             if (message.receiver === contact._id || message.sender === contact._id) {
                                 return (
                                     <div key={index} className={`flex ${justifyClass} mb-2`}>
-                                        <div className={`flex ${bgClass} p-2 px-3 rounded-lg max-w-[500px] item-center`}>
+                                        <div className={`flex ${bgClass} p-2 px-3 rounded-lg max-w-[190px] lg:max-w-[500px] md:max-w-[500px] item-center`}>
                                             <p className='break-all whitespace-pre-wrap text-white text-[14px]'>{message.message}</p>
                                         </div>
                                     </div>
