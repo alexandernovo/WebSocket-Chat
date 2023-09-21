@@ -19,7 +19,7 @@ class ChatApp {
         this.port = port;
         this.app = express();
         this.server = http.createServer(this.app);
-        this.io = require('socket.io')(this.server, {
+        this.io = socketIo(this.server, {
             cors: {
                 origin: process.env.CLIENT,
                 methods: ["GET", "POST"],
