@@ -79,9 +79,8 @@ const Messages = ({ onClick }) => {
 
         if (userID) {
             socket.on(`${userID}`, (newMessage) => {
-                console.log(newMessage);
                 setMessages((prevMessages) => {
-                    // Find the index of the existing message with the same sender and receiver
+                    // Find the index of the existing message with the same sender and receiver vice versa
                     const index = prevMessages.findIndex(message =>
                         message.sender._id === newMessage.sender._id &&
                         message.receiver._id === newMessage.receiver._id

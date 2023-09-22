@@ -3,10 +3,7 @@ import Layout from '../layout/Layout'
 import ChatBox from '../components/ChatBox'
 import Sidebar from '../components/Sidebar'
 import Profile from '../components/Profile'
-import { getSessionData } from '../utils/Session';
 import axios from 'axios'
-import Nav from '../components/Nav'
-import io from 'socket.io-client';
 
 const Home = () => {
     const [contact, setContact] = useState({});
