@@ -91,7 +91,7 @@ class ChatController {
             const decoded = verifyToken(bearerToken);
             if (decoded) {
                 this.onlineUsers.add(decoded.userId);
-                this.updateOnlineUsers(io);  // Update online users when a user connects
+                this.updateOnlineUsers(io);
             }
         });
 
@@ -108,15 +108,25 @@ class ChatController {
                         message
                     };
 
-                    const chat = await this.chatModel.createChatMessage(chatData);
                     try {
+                        const chat = await this.chatModel.createChatMessage(chatData);
                         if (decoded.userId == receiver) {
                             io.to(`${decoded.userId}_to_${receiver}`).emit('Messages', chat);
                         } else {
                             io.to(`${decoded.userId}_to_${receiver}`).emit('Messages', chat);
                             io.to(`${receiver}_to_${decoded.userId}`).emit('Messages', chat);
                         }
-
+                        try {
+                            const chatPop = await this.chatModel.populateMessage(chat);
+                            if (decoded.userId == receiver) {
+                                io.emit(`${decoded.userId}`, chatPop)
+                            } else {
+                                io.emit(`${decoded.userId}`, chatPop)
+                                io.emit(`${receiver}`, chatPop)
+                            }
+                        } catch (error) {
+                            console.log('Cannot Emit Side Messages');
+                        }
                     } catch (error) {
                         console.log('Cannot Emit Messages');
                     }

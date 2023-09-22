@@ -1,60 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Placeholder from '../assets/profile/placeholder.jpg';
 import axios from 'axios';
 import io from 'socket.io-client';
 import { DatetoString } from '../utils/Date';
-import { getSessionData } from '../utils/Session';
+import { getSessionData } from '../utils/Session'
 
 const Messages = ({ onClick }) => {
     const [messages, setMessages] = useState([]);
     const [user, setUser] = useState('');
-    const [socketInstance, setSocketInstance] = useState(null);
     const [userID, setUserID] = useState(null);
+    const socketInstance = useRef(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const token = sessionStorage.getItem('authToken');
-
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await getSessionData();
-            setUserID(response.data._id);
-        };
-        fetchData();
+        getSessionData()
+            .then(response => {
+                setUserID(response.data._id);
+                console.log(response.data._id);
+            })
+            .catch(error => {
+                console.log('Error Getting Session: ', error);
+            });
     }, []);
 
     useEffect(() => {
-        const socket = io(import.meta.env.VITE_API_URL);
-        setSocketInstance(socket);
-        // Clean up socket when component is unmounted
+        socketInstance.current = io(import.meta.env.VITE_API_URL);
         return () => {
-            socket.disconnect();
+            socketInstance.current.disconnect();
         };
     }, []);
 
     useEffect(() => {
-        if (socketInstance) {
-            socketInstance.on('connect', () => {
+        const socket = socketInstance.current;
+        if (socket) {
+            socket.on('connect', () => {
                 console.log('Connected to WebSocket');
             });
 
-            socketInstance.on('disconnect', () => {
+            socket.on('disconnect', () => {
                 console.log('Disconnected from WebSocket');
             });
             // Listen for 'onlineUsers' event
-            socketInstance.on('onlineUsers', (users) => {
+            socket.on('onlineUsers', (users) => {
                 setOnlineUsers(users);
             });
 
             // Emit 'setOnlineUsers' event
-            socketInstance.emit('setOnlineUsers', token);
+            socket.emit('setOnlineUsers', token);
         }
         return () => {
-            if (socketInstance) {
-                socketInstance.disconnect();
+            if (socket) {
+                socket.disconnect();
             }
         };
     }, [socketInstance]);
 
-    const fetchData = () => {
+    useEffect(() => {
         if (token) {
             axios.get('/api/chat/getMessages', {
                 headers: {
@@ -71,31 +72,47 @@ const Messages = ({ onClick }) => {
         } else {
             console.log('Error: Token not Provided');
         };
-    };
+    }, []);
 
     useEffect(() => {
-        // Function to fetch data initially
-        const fetchInitialData = () => {
-            fetchData();
+        const socket = socketInstance.current;
+
+        if (userID) {
+            socket.on(`${userID}`, (newMessage) => {
+                console.log(newMessage);
+                setMessages((prevMessages) => {
+                    // Find the index of the existing message with the same sender and receiver
+                    const index = prevMessages.findIndex(message =>
+                        message.sender._id === newMessage.sender._id &&
+                        message.receiver._id === newMessage.receiver._id
+                        ||
+                        message.receiver._id === newMessage.sender._id &&
+                        message.sender._id === newMessage.receiver._id
+                    );
+
+                    if (index !== -1) {
+                        // If an existing message is found, replace it with the new message
+                        return [
+                            ...prevMessages.slice(0, index),
+                            newMessage,
+                            ...prevMessages.slice(index + 1)
+                        ];
+                    } else {
+                        // If no existing message is found, append the new message to the end
+                        return [...prevMessages, newMessage];
+                    }
+                });
+            });
+        }
+
+        return () => {
+            if (socket) {
+                socket.off(`${userID}`);
+            }
         };
+    }, [userID]);
 
-        // Function to fetch data when searchInput changes
-        const fetchUpdatedData = () => {
-            fetchData();
-        };
 
-        // Fetch data initially
-        fetchInitialData();
-
-        // Fetch data immediately when component is re-mounted
-        fetchData();
-
-        // Set interval to fetch data every 5 seconds
-        const interval = setInterval(fetchUpdatedData, 5000);
-
-        return () => clearInterval(interval);
-
-    }, []);
 
     return (
         <div className='h-full'>

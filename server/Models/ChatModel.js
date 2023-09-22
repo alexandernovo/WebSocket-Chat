@@ -33,7 +33,13 @@ class ChatModel {
             throw error;
         }
     }
-
+    async populateMessage(data) {
+        try {
+            return await this.ChatMessage.populate(data, { path: 'sender receiver' });
+        } catch (error) {
+            throw error;
+        }
+    }
     async getChatMessages(senderId, receiverId) {
         try {
             return await this.ChatMessage.find({

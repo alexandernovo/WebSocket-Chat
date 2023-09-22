@@ -13,30 +13,10 @@ const Home = () => {
     const [localContact, setLocalContact] = useState(localStorage.getItem('contactID'));
     const [toggle, setToggle] = useState(false);
     const [showMessage, setShowMessage] = useState(true);
-    const [userID, setUserID] = useState(null);
     const [showProfile, setShowProfile] = useState(false);
-    const [socketInstance, setSocketInstance] = useState(null);
 
     //change the contact localstorage and to activate dependencies and to refetch messages in a selected contact
     // Change the contact local storage and activate dependencies to refetch messages for the selected contact
-
-    useEffect(() => {
-        const socket = io(import.meta.env.VITE_API_URL);
-        setSocketInstance(socket);
-
-        // Clean up socket when component is unmounted
-        return () => {
-            socket.disconnect();
-        };
-    }, []);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await getSessionData();
-            setUserID(response.data._id);
-        };
-        fetchData();
-    }, []);
 
     const handleContact = (id) => {
         localStorage.setItem('contactID', id);
@@ -105,10 +85,8 @@ const Home = () => {
             }
             // Add a condition to check if the keyboard is open
             else {
-                if (window.innerHeight >= window.innerWidth) {
-                    if (localStorage.getItem('contactID') === null) {
-                        setToggle(true);
-                    }
+                if (!localStorage.getItem('contactID')) {
+                    setToggle(true);
                 }
 
             }
