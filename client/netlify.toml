@@ -2,6 +2,7 @@
   from = "/api/*"
   to = "https://chat-app-xsxm.onrender.com/api/:splat"
   status = 307
+  force = true
 
 [[redirects]]
 from = "/*"
