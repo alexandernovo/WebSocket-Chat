@@ -3,6 +3,7 @@
   to = "https://chat-app-xsxm.onrender.com/api/:splat"
   status = 307
   force = true
+  headers = {X-From = "Netlify"}
 
 [[redirects]]
 from = "/*"
