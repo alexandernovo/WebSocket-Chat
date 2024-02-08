@@ -141,7 +141,7 @@ const Chat = ({ contact, setToggle, showMessage }) => {
                                 return (
                                     <div key={index} className={`flex ${justifyClass} mb-2`}>
                                         <div className={`flex ${bgClass} p-2 px-3 rounded-lg max-w-[190px] lg:max-w-[500px] md:max-w-[500px] item-center`}>
-                                            <p className='break-all whitespace-pre-wrap text-white text-[14px]'>{message.message}</p>
+                                            <p className='break-keep whitespace-pre-wrap text-white text-[14px]'>{message.message}</p>
                                         </div>
                                     </div>
                                 );

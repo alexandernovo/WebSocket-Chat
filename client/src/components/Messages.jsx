@@ -6,23 +6,26 @@ import { DatetoString } from '../utils/Date';
 import { getSessionData } from '../utils/Session'
 
 const Messages = ({ onClick }) => {
+
     const [messages, setMessages] = useState([]);
     const [user, setUser] = useState('');
     const [userID, setUserID] = useState(null);
     const socketInstance = useRef(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const token = sessionStorage.getItem('authToken');
+
+    //getting ID from session
     useEffect(() => {
         getSessionData()
             .then(response => {
                 setUserID(response.data._id);
-                console.log(response.data._id);
             })
             .catch(error => {
                 console.log('Error Getting Session: ', error);
             });
     }, []);
 
+    //Socket variable
     useEffect(() => {
         socketInstance.current = io(import.meta.env.VITE_API_URL);
         return () => {
@@ -30,6 +33,7 @@ const Messages = ({ onClick }) => {
         };
     }, []);
 
+    //set an online users
     useEffect(() => {
         const socket = socketInstance.current;
         if (socket) {
@@ -55,6 +59,7 @@ const Messages = ({ onClick }) => {
         };
     }, [socketInstance]);
 
+    //pre load Messages
     useEffect(() => {
         if (token) {
             axios.get('/api/chat/getMessages', {
@@ -74,6 +79,7 @@ const Messages = ({ onClick }) => {
         };
     }, []);
 
+    //Add Messages with websocket
     useEffect(() => {
         const socket = socketInstance.current;
 
@@ -142,7 +148,7 @@ const Messages = ({ onClick }) => {
                                                     <h6 className={`text-[14px] text-gray-700`}>{`${message.receiver.firstname} ${message.receiver.lastname}`}</h6>
                                                 </div>
                                                 <div className='flex items-center'>
-                                                    <p className='text-[11px] text-gray-400 truncate max-w-[140px]'>{`You: ${message.message}`}</p>
+                                                    <p className='text-[11px] text-gray-400 truncate max-w-[180px] md:max-w-[140px] lg:max-w-[140px]'>{`You: ${message.message}`}</p>
                                                     <p className='text-gray-500 text-[11px] ms-2'>{DatetoString(message.createdAt)}</p>
                                                 </div>
                                             </div>
@@ -154,7 +160,7 @@ const Messages = ({ onClick }) => {
                                                 <h6 className={`text-[14px] text-gray-700`}>{`${message.sender.firstname} ${message.sender.lastname}`}</h6>
                                             </div>
                                             <div className='flex items-center'>
-                                                <p className='text-[11px] text-gray-400 truncate'>{message.message}</p>
+                                                <p className='text-[11px] text-gray-400 truncate max-w-[180px] md:max-w-[140px] lg:max-w-[140px]'>{message.message}</p>
                                                 <p className='text-gray-500 text-[11px] ms-2'>{DatetoString(message.createdAt)}</p>
                                             </div>
                                         </div>
