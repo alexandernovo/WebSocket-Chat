@@ -3,9 +3,15 @@
   to = "https://chat-app-xsxm.onrender.com/api/:splat"
   status = 307
   force = true
-  headers = {X-From = "Netlify"}
 
 [[redirects]]
 from = "/*"
 to = "/index.html"
 status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+
