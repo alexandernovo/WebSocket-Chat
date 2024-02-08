@@ -7,7 +7,7 @@ const Chat = ({ contact, setToggle, showMessage }) => {
     const [chat, setChat] = useState('');
     const textareaRef = useRef(null);
     const [messages, setMessages] = useState([]);
-    const token = sessionStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken');
     const messagesEndRef = useRef(null);
     const socketInstance = useRef(null); // Use useRef here
     const chatContainerRef = useRef(null);

@@ -7,7 +7,7 @@ const PrivateRoutes = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const token = sessionStorage.getItem('authToken');
+        const token = localStorage.getItem('authToken');
         if (token) {
             axios.post('/api/authToken', null, {
                 headers: {

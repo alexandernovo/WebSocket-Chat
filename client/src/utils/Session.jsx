@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const getSessionData = async () => {
     try {
-        const token = sessionStorage.getItem('authToken');
+        const token = localStorage.getItem('authToken');
         if (token) {
             const response = await axios.get(`/api/users/session`, {
                 headers: {
@@ -19,7 +19,7 @@ export const getSessionData = async () => {
 
 export const Logout = async (navigateTo) => {
     try {
-        sessionStorage.removeItem('authToken');
+        localStorage.removeItem('authToken');
         navigateTo('/');
     } catch (error) {
         console.error('Error during logout:', error);

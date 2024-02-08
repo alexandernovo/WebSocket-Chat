@@ -21,7 +21,7 @@ const Login = () => {
             const response = await axios.post('/api/users/auth', { username, password });
             if (response.data && response.data.status === 'success') {
                 const { token } = response.data;
-                sessionStorage.setItem('authToken', token);
+                localStorage.setItem('authToken', token);
                 navigate('/home');
             }
         } catch (error) {

@@ -12,7 +12,7 @@ const Messages = ({ onClick }) => {
     const [userID, setUserID] = useState(null);
     const socketInstance = useRef(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
-    const token = sessionStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken');
 
     //getting ID from session
     useEffect(() => {

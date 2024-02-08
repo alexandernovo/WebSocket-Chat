@@ -11,7 +11,7 @@ const Profile = ({ setToggle }) => {
     const [session, setSession] = useState({});
     const [open, setOpen] = useState(false)
     const [image, setImage] = useState(null);
-    const token = sessionStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken');
     const [rerender, setRerender] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
     const navigate = useNavigate();
